@@ -48,6 +48,8 @@ type SearchResponse = {
   }[];
 };
 export const byQuery = async (props: {apiKey: string; query: string}) => {
+  if (!props.apiKey || !props.query)
+    throw new Error(`Invalid argument: ${props}`);
   const response = await axios.get<SearchResponse>(config.api.search, {
     params: {
       part: 'snippet',
@@ -55,7 +57,6 @@ export const byQuery = async (props: {apiKey: string; query: string}) => {
       q: props.query,
     },
   });
-  console.log(response);
 
   return response.data.items.map(item => ({
     id: item.id.videoId,
