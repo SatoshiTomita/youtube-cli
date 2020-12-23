@@ -8,7 +8,7 @@ const appName = 'youtube-cli';
 export const main = (async () => {
   console.log(chalk.blue('Welcome to YouTube CLI\n'));
   const configStore = new Configstore(appName);
-  if (configStore.get('apiKey') === undefined) {
+  if (!configStore.has('apiKey')) {
     const userInput = await prompts({
       name: 'apiKey',
       type: 'text',
