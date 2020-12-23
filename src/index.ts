@@ -30,7 +30,7 @@ export const main = (async () => {
   });
   console.log(`Searching for ${userInput.query}...\n`);
   const videos = await api.search.byQuery({
-    apiKey: apiKey.apiKey,
+    apiKey,
     query: userInput.query,
   });
 
