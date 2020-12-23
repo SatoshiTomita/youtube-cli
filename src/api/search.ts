@@ -14,8 +14,10 @@ type SearchResponse = {
     kind: string;
     etag: string;
     id: {
-      kind: string;
-      videoId: string;
+      kind: 'youtube#video' | 'youtube#playlist' | 'youtube#channel';
+      videoId?: string;
+      playlistId?: string;
+      channelId?: string;
     };
     snippet?: {
       publishedAt: string;
@@ -25,22 +27,22 @@ type SearchResponse = {
       thumbnails: {
         default: {
           url: string;
-          width: number;
-          height: number;
+          width?: number;
+          height?: number;
         };
         medium: {
           url: string;
-          width: number;
-          height: number;
+          width?: number;
+          height?: number;
         };
         high: {
           url: string;
-          width: number;
-          height: number;
+          width?: number;
+          height?: number;
         };
       };
       channelTitle: string;
-      liveBroadcastContent: 'live';
+      liveBroadcastContent: 'none' | 'live';
       publishTime: string;
     };
   }[];
