@@ -55,6 +55,9 @@ export const byQuery = async (props: {apiKey: string; query: string}) => {
       part: 'snippet',
       key: props.apiKey,
       q: props.query,
+      maxResults: 10,
+      safeSearch: 'none',
+      type: 'video,playlist',
     },
   });
 
