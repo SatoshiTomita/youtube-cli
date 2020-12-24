@@ -14,10 +14,9 @@ type SearchResponse = {
     kind: string;
     etag: string;
     id: {
-      kind: 'youtube#video' | 'youtube#playlist' | 'youtube#channel';
+      kind: 'youtube#video' | 'youtube#playlist';
       videoId?: string;
       playlistId?: string;
-      channelId?: string;
     };
     snippet?: {
       publishedAt: string;
@@ -47,7 +46,17 @@ type SearchResponse = {
     };
   }[];
 };
-export const byQuery = async (props: {apiKey: string; query: string}) => {
+
+export type Video = {
+  id: string;
+  title?: string;
+  description?: string;
+};
+
+export const byQuery = async (props: {
+  apiKey: string;
+  query: string;
+}): Promise<Video[]> => {
   if (!props.apiKey || !props.query)
     throw new Error(`Invalid argument: ${props}`);
   const response = await axios.get<SearchResponse>(config.api.search, {
@@ -60,10 +69,10 @@ export const byQuery = async (props: {apiKey: string; query: string}) => {
       type: 'video,playlist',
     },
   });
-
   return response.data.items.map(item => ({
-    id: item.id.videoId,
+    id: item.id.videoId || item.id.playlistId || '',
     title: item.snippet?.title,
     description: item.snippet?.description,
+    // tumbnail: item.snippet?.thumbnails.default.url,
   }));
 };
