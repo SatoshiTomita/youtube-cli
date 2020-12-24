@@ -3,7 +3,7 @@ import prompts = require('prompts');
 import {api} from './api';
 import Configstore = require('configstore');
 import {spawn} from 'child_process';
-// import {textSync} from 'figlet';
+import {textSync} from 'figlet';
 import Table = require('cli-table3');
 import {Video} from './api/search';
 
@@ -67,14 +67,13 @@ const playYoutubeMusic = (videoId: string) => {
 };
 
 export const main = (async () => {
-  console.log(chalk.red('Welcome to YouTube CLI\n'));
-  // console.log(
-  //   chalk.red(
-  //     textSync('YouTube CLI', {
-  //       font: 'Standard',
-  //     })
-  //   )
-  // );
+  console.log(
+    chalk.red(
+      textSync('YouTube', {
+        font: 'Standard',
+      })
+    )
+  );
   const apiKey = await getApiKey();
   const videos = await searchVideos(apiKey);
   const videoId = await chooseVideo(videos);
