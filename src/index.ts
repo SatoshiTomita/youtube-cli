@@ -39,7 +39,7 @@ const searchVideos = async (apiKey: string) => {
 const chooseVideo = async (videos: Video[]): Promise<string> => {
   const table = new Table({
     head: ['', 'title'],
-    colWidths: [3, 80],
+    colWidths: [4, 76],
   });
   table.push();
 

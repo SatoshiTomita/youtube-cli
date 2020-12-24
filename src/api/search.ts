@@ -64,7 +64,7 @@ export const byQuery = async (props: {
       part: 'snippet',
       key: props.apiKey,
       q: props.query,
-      maxResults: 10,
+      maxResults: 20,
       safeSearch: 'none',
       type: 'video,playlist',
     },
