@@ -4,6 +4,8 @@ import {api} from './api';
 import Configstore = require('configstore');
 import {spawn} from 'child_process';
 // import {textSync} from 'figlet';
+import Table = require('cli-table3');
+import {Video} from './api/search';
 
 const appName = 'youtube-cli';
 
@@ -34,22 +36,27 @@ const searchVideos = async (apiKey: string) => {
   });
 };
 
-const chooseVideo = (
-  videos: {id?: string; title?: string; description?: string}[]
-) => {
-  const choices = videos.map(video => ({
-    title: video.title || '',
-    // description: video.description,
-    value: video.id,
-    disabled: false,
-  }));
-  return prompts({
-    type: 'select',
-    name: 'videoId',
-    message: 'Select a video',
-    choices,
+const chooseVideo = async (videos: Video[]): Promise<string> => {
+  const table = new Table({
+    head: ['', 'title'],
+    colWidths: [3, 80],
+  });
+  table.push();
+
+  videos.forEach((video, index) => {
+    table.push([index, video.title]);
+  });
+
+  console.log(table.toString());
+  const userChoice = await prompts({
+    type: 'number',
+    name: 'videoNumber',
+    message: 'Select a video number',
+    min: 0,
+    max: videos.length - 1,
     initial: 0,
   });
+  return videos[userChoice.videoNumber].id;
 };
 
 const playYoutubeMusic = (videoId: string) => {
@@ -70,6 +77,6 @@ export const main = (async () => {
   // );
   const apiKey = await getApiKey();
   const videos = await searchVideos(apiKey);
-  const userChoice = await chooseVideo(videos);
-  playYoutubeMusic(userChoice.videoId);
+  const videoId = await chooseVideo(videos);
+  playYoutubeMusic(videoId);
 })();
