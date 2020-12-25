@@ -59,11 +59,65 @@ const chooseVideo = async (videos: Video[]): Promise<string> => {
   return videos[userChoice.videoNumber].id;
 };
 
-const playYoutubeMusic = (videoId: string) => {
-  if (videoId === undefined) throw new Error('undefined');
-  const url = `https://www.youtube.com/watch?v=${videoId}`;
+const selectPlayMode = async (): Promise<
+  'music' | 'video' | 'download' | 'mp3download'
+> => {
+  const userChoice = await prompts({
+    type: 'select',
+    name: 'mode',
+    message: 'Play Mode',
+    choices: [
+      {title: 'Music', description: 'Play Audio', value: 'music'},
+      {title: 'Video', description: 'Play video', value: 'video'},
+      {title: 'Download', description: 'Download video', value: 'download'},
+      {
+        title: 'Download Music',
+        description: 'Download video as mp3',
+        value: 'mp3download',
+      },
+    ],
+  });
+  return userChoice.mode;
+};
+
+const playYoutube = (props: {videoId: string; noVideo?: boolean}) => {
+  if (props.videoId === undefined) throw new Error('undefined');
+  const url = `https://www.youtube.com/watch?v=${props.videoId}`;
   console.log('Play: ', url);
-  spawn('mpv', ['--no-video', url], {stdio: 'inherit'});
+  spawn('mpv', (props.noVideo ? ['--no-video'] : []).concat(url), {
+    stdio: 'inherit',
+  });
+};
+
+const downloadYoutube = async (props: {videoId: string; mp3?: boolean}) => {
+  if (props.videoId === undefined) throw new Error('undefined');
+  const defaultDirectory = props.mp3 ? '~/Music/' : '~/Movies/';
+  const directory = await prompts({
+    type: 'text',
+    name: 'path',
+    message: `Enter your download directory (default: ${defaultDirectory})`,
+  });
+  const folder = directory.path || defaultDirectory;
+  console.log(`Downlaod to ${folder}`);
+  const confirmation = await prompts({
+    type: 'confirm',
+    name: 'value',
+    message: 'Can you confirm?',
+    initial: true,
+  });
+  if (!confirmation.value) return;
+
+  const url = `https://www.youtube.com/watch?v=${props.videoId}`;
+  console.log(`URL: ${url}`);
+  spawn(
+    'youtube-dl',
+    [url, '-o', `${folder}%(title)s.%(ext)s`].concat(
+      props.mp3 ? ['-x', '--audio-format', 'mp3'] : []
+    ),
+    {
+      stdio: 'inherit',
+    }
+  );
 };
 
 export const main = (async () => {
@@ -77,5 +131,23 @@ export const main = (async () => {
   const apiKey = await getApiKey();
   const videos = await searchVideos(apiKey);
   const videoId = await chooseVideo(videos);
-  playYoutubeMusic(videoId);
+  const mode = await selectPlayMode();
+  switch (mode) {
+    case 'music': {
+      playYoutube({videoId, noVideo: true});
+      break;
+    }
+    case 'video': {
+      playYoutube({videoId});
+      break;
+    }
+    case 'download': {
+      downloadYoutube({videoId});
+      break;
+    }
+    case 'mp3download': {
+      downloadYoutube({videoId, mp3: true});
+      break;
+    }
+  }
 })();
