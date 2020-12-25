@@ -34,7 +34,6 @@
     "cli-table3": "^0.6.0",
     "commander": "^6.2.1",
     "configstore": "^5.0.1",
-    "prompts": "^2.4.0",
-    "yargs": "^16.2.0"
+    "prompts": "^2.4.0"
   }
 }
