@@ -3,7 +3,6 @@ import prompts = require('prompts');
 import {api} from './api';
 import Configstore = require('configstore');
 import {spawn} from 'child_process';
-import {textSync} from 'figlet';
 import Table = require('cli-table3');
 import {Video} from './api/search';
 
@@ -123,9 +122,11 @@ const downloadYoutube = async (props: {videoId: string; mp3?: boolean}) => {
 export const main = (async () => {
   console.log(
     chalk.red(
-      textSync('YouTube', {
-        font: 'Standard',
-      })
+      ' __   __         _____      _\n',
+      ' \\ \\ / /__  _   |_   _|   _| |__   ___\n',
+      "  \\ V / _ \\| | | || || | | | '_ \\ / _ \\\n",
+      '   | | (_) | |_| || || |_| | |_) |  __/\n',
+      '   |_|\\___/ \\__,_||_| \\__,_|_.__/ \\___|\n'
     )
   );
   const apiKey = await getApiKey();
