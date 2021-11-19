@@ -29,3 +29,8 @@ Search google for how.
     $ ytcli
 
 then, type your API key.
+
+## TODO
+- [ ] Country selection
+- [ ] Docker support
+- [ ] Easy installation
