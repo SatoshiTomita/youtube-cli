@@ -1,14 +1,17 @@
 {
   "name": "youtube-cli",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "youtube cli",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
+  "main": "build/main.js",
+  "types": "build/main.d.ts",
   "files": [
     "build/src"
   ],
-  "license": "Apache-2.0",
+  "license": "MIT",
   "keywords": [],
+  "bin": {
+    "ytcli": "./build/runner.js"
+  },
   "scripts": {
     "start": "ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
